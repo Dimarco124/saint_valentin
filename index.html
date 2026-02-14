@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Pour Emmanuella 💌</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=EB+Garamond:ital,wght@0,400;1,400&display=swap" rel="stylesheet" />
+<style>
+  /* ── RESET ── */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --rose:  #ff6b8a;
+    --gold:  #f0c87a;
+    --white: #fff8f5;
+    --cream: #fce8e8;
+  }
+
+  html, body {
+    width: 100%; height: 100%;
+    overflow: hidden;              /* STRICT 100vh — no scroll ever */
+  }
+
+  body {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    background: #0e040c;
+    animation: globalFadeIn 1.6s ease both;
+  }
+
+  @keyframes globalFadeIn {
+    from { opacity: 0; } to { opacity: 1; }
+  }
+
+  /* ── BACKGROUND ── */
+  #bg {
+    position: fixed; inset: 0; z-index: 0;
+    background:
+      url('WhatsApp Image 2026-02-14 at 00.11.12 (1).jpeg')
+      center center / cover no-repeat;
+    animation: bgBreath 12s ease-in-out infinite alternate;
+  }
+  @keyframes bgBreath {
+    from { transform: scale(1);    filter: brightness(.8) saturate(1.1); }
+    to   { transform: scale(1.05); filter: brightness(.95) saturate(1.4); }
+  }
+
+  /* ── DARK VEIL ── */
+  #veil {
+    position: fixed; inset: 0; z-index: 1;
+    background: rgba(14, 4, 12, 0.67);
+    backdrop-filter: blur(1px);
+  }
+
+  /* ── GLOW ── */
+  #glow {
+    position: fixed; inset: 0; z-index: 2; pointer-events: none;
+    background: radial-gradient(ellipse 70% 50% at 50% 60%,
+      rgba(255,100,130,.13) 0%, transparent 70%);
+    animation: glowPulse 5s ease-in-out infinite alternate;
+  }
+  @keyframes glowPulse {
+    from { opacity: .55; } to { opacity: 1; }
+  }
+
+  /* ── FLOATING HEARTS ── */
+  #hearts { position: fixed; inset: 0; z-index: 2; pointer-events: none; overflow: hidden; }
+  .heart {
+    position: absolute; bottom: -60px; opacity: 0;
+    animation: floatHeart linear infinite;
+  }
+  @keyframes floatHeart {
+    0%   { transform: translateY(0) rotate(-15deg) scale(.6); opacity: 0; }
+    10%  { opacity: .5; }
+    85%  { opacity: .3; }
+    100% { transform: translateY(-110vh) rotate(20deg) scale(1.1); opacity: 0; }
+  }
+
+  /* ── POEM WRAP — 100vh avec scroll interne invisible ── */
+  #poem-wrap {
+    position: relative; z-index: 3;
+    width: 100%; height: 100vh;
+    display: flex; flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    overflow-y: auto;
+    overflow-x: hidden;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    padding: clamp(2rem, 5vh, 4rem) clamp(1rem, 5vw, 4rem) clamp(3rem, 8vh, 6rem);
+    gap: 0;
+    scroll-behavior: smooth;
+  }
+  #poem-wrap::-webkit-scrollbar { display: none; }
+
+  /* ── HEADER BADGE ── */
+  #poem-header {
+    text-align: center; margin-bottom: .28rem;
+    opacity: 0; animation: fadeSlideIn .9s ease .5s both;
+  }
+  #poem-header .emoji-burst {
+    font-size: clamp(.85rem, 2vw, 1.25rem);
+    letter-spacing: .25em; display: block; margin-bottom: .1rem;
+    animation: heartBeat 2s ease-in-out 1.6s infinite;
+  }
+  #poem-header .title {
+    font-family: 'EB Garamond', serif; font-style: italic;
+    font-size: clamp(.6rem, 1.3vw, .8rem);
+    letter-spacing: .42em; text-transform: uppercase;
+    color: var(--gold); opacity: .75;
+  }
+  @keyframes heartBeat {
+    0%,100% { transform: scale(1); }
+    14%      { transform: scale(1.22); }
+    28%      { transform: scale(1); }
+    42%      { transform: scale(1.14); }
+    56%      { transform: scale(1); }
+  }
+
+  /* ── POEM ── */
+  #poem {
+    display: flex; flex-direction: column; align-items: center;
+    gap: clamp(.06rem, .45vh, .45rem);
+    width: 100%; max-width: 620px;
+  }
+
+  .line {
+    position: relative; text-align: center;
+    color: var(--white); font-weight: 300;
+    line-height: 1.25; white-space: pre-wrap; word-break: break-word;
+    opacity: 0; transform: translateY(6px);
+    transition: opacity .5s ease, transform .5s ease;
+    /* default size — scales fluidly */
+    font-size: clamp(.9rem, 1.9vw, 1.28rem);
+  }
+  .line.visible { opacity: 1; transform: translateY(0); }
+
+  /* style variants */
+  .line.big {
+    font-size: clamp(1.05rem, 2.4vw, 1.6rem);
+    font-style: italic; color: var(--cream);
+  }
+  .line.name {
+    font-size: clamp(1.25rem, 3.1vw, 2rem);
+    font-style: italic; color: var(--rose);
+    text-shadow: 0 0 26px rgba(255,107,138,.55);
+    letter-spacing: .04em;
+  }
+  .line.final {
+    font-size: clamp(1rem, 2.1vw, 1.38rem);
+    color: var(--gold); font-style: italic;
+    text-shadow: 0 0 18px rgba(240,200,122,.4);
+    letter-spacing: .02em;
+  }
+  .line.empty {
+    height: clamp(.12rem, .5vh, .4rem);
+    opacity: 1 !important; transform: none !important;
+  }
+
+  /* ── CURSOR ── */
+  #cursor {
+    display: inline-block; width: 1.5px; height: .95em;
+    background: var(--rose); margin-left: 1px; vertical-align: middle;
+    border-radius: 1px; box-shadow: 0 0 6px var(--rose);
+    animation: blink .7s step-end infinite;
+  }
+  @keyframes blink {
+    0%,100% { opacity: 1; } 50% { opacity: 0; }
+  }
+
+  /* ── FOOTER ── */
+  #poem-footer {
+    margin-top: .35rem; text-align: center; opacity: 0;
+  }
+  #poem-footer .done-emojis {
+    font-size: clamp(.85rem, 1.8vw, 1.15rem);
+    letter-spacing: .3em;
+    animation: heartBeat 1.8s ease-in-out infinite;
+  }
+
+  @keyframes fadeSlideIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── SPACERS pour centrage vertical au départ ── */
+  #top-spacer, #bottom-spacer { flex-shrink: 0; width: 100%; }
+
+  /* ── BOUTON MUSIQUE ── */
+  #music-btn {
+    position: fixed; bottom: 1.2rem; right: 1.4rem; z-index: 20;
+    background: rgba(255,107,138,.15);
+    border: 1px solid rgba(255,107,138,.35);
+    border-radius: 50%; width: 2.6rem; height: 2.6rem;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; backdrop-filter: blur(6px);
+    transition: background .3s, transform .2s, box-shadow .3s;
+    box-shadow: 0 0 14px rgba(255,107,138,.2);
+    font-size: 1.1rem; color: #ff6b8a; user-select: none;
+  }
+  #music-btn:hover { background: rgba(255,107,138,.28); transform: scale(1.1); box-shadow: 0 0 22px rgba(255,107,138,.4); }
+  #music-btn.playing { animation: musicPulse 2s ease-in-out infinite; }
+  @keyframes musicPulse {
+    0%,100% { box-shadow: 0 0 14px rgba(255,107,138,.3); }
+    50%      { box-shadow: 0 0 28px rgba(255,107,138,.65); }
+  }
+  @media (max-width: 480px) {
+    #poem { max-width: 96vw; }
+  }
+</style>
+</head>
+<body>
+
+<div id="bg"></div>
+<div id="veil"></div>
+<div id="hearts"></div>
+<div id="glow"></div>
+
+<!-- Bouton musique discret -->
+<button id="music-btn" title="Musique on/off">🎵</button>
+
+<div id="poem-wrap">
+
+  <div id="top-spacer"></div>
+
+  <div id="poem-header">
+    <span class="emoji-burst">💗</span>
+    <span class="title">Saint-Valentin</span>
+  </div>
+
+  <div id="poem"></div>
+
+  <div id="poem-footer">
+    <div class="done-emojis">🌹 💗 🌙</div>
+  </div>
+
+  <div id="bottom-spacer"></div>
+
+</div>
+
+<script>
+/* ──────────────────────────────────────
+   POEM DATA
+   style: '' | 'big' | 'name' | 'final' | 'empty'
+   pause: ms to breathe after line ends
+────────────────────────────────────── */
+const POEM = [
+  { text: "Je t'ai écrit le premier jour,",                      style: '',      pause: 260 },
+  { text: "sans savoir que j'allais t'aimer.",                   style: '',      pause: 260 },
+  { text: "Une phrase timide, posée dans le vide,",              style: '',      pause: 220 },
+  { text: "qui ne cherchait personne",                           style: '',      pause: 220 },
+  { text: "et qui t'a trouvée.",                             style: '',      pause: 550 },
+  { text: '',                                                    style: 'empty', pause: 0   },
+  { text: "Je t'ai aimée avant les visages,",                    style: '',      pause: 220 },
+  { text: "avant les photos, avant les certitudes.",             style: '',      pause: 220 },
+  { text: "Je t'ai aimée dans l'espace entre deux messages,",    style: '',      pause: 220 },
+  { text: "là où le cœur devine",                                style: '',      pause: 200 },
+  { text: "avant que les yeux confirment.",                   style: '',      pause: 580 },
+  { text: '',                                                    style: 'empty', pause: 0   },
+  { text: "Un lundi 12 août 2024, à 11h32",                  style: 'big',   pause: 260 },
+  { text: "nos mots ont décidé d'être sérieux.",                 style: '',      pause: 220 },
+  { text: "Deux écrans, un accord silencieux,",                  style: '',      pause: 220 },
+  { text: "et le monde a changé de taille.",               style: '',      pause: 580 },
+  { text: '',                                                    style: 'empty', pause: 0   },
+  { text: "Puis un mercredi 18 septembre, à 19h43",           style: 'big',   pause: 260 },
+  { text: "le réel est venu nous saluer.",                       style: '',      pause: 220 },
+  { text: "Tes pas ont traversé l'air,",                         style: '',      pause: 200 },
+  { text: "mon regard a trouvé sa place,",                       style: '',      pause: 200 },
+  { text: "et tout ce que j'avais imaginé a appris à respirer. 🕊️", style: '', pause: 580 },
+  { text: '',                                                    style: 'empty', pause: 0   },
+  { text: "Emmanuella, 💗",                                      style: 'name',  pause: 360 },
+  { text: "ton prénom a une façon douce",                        style: '',      pause: 200 },
+  { text: "de s'installer dans mes phrases.",                    style: '',      pause: 200 },
+  { text: "Il ne fait pas de bruit, il éclaire.",            style: '',      pause: 550 },
+  { text: '',                                                    style: 'empty', pause: 0   },
+  { text: "Valdes, 🖊️",                                          style: 'name',  pause: 360 },
+  { text: "c'est moi quand je t'écris,",                         style: '',      pause: 200 },
+  { text: "un peu plus vrai, un peu plus calme,",                style: '',      pause: 200 },
+  { text: "un peu plus chez moi.",                            style: '',      pause: 580 },
+  { text: '',                                                    style: 'empty', pause: 0   },
+  { text: "Si j'ai commencé par une phrase,",                    style: '',      pause: 220 },
+  { text: "c'est parce que certaines histoires",                 style: '',      pause: 200 },
+  { text: "naissent d'un mot simple et deviennent, sans prévenir,", style: '',  pause: 200 },
+  { text: "un lieu où le cœur aime rester.",                 style: '',      pause: 620 },
+  { text: '',                                                    style: 'empty', pause: 0   },
+  { text: "Notre amour n'est pas simple… il est éternel. 💞",   style: 'final', pause: 0   },
+];
+
+/* ──────────────────────────────────────
+   CENTRAGE DYNAMIQUE + AUTO-SCROLL
+   — Les spacers centrent le contenu tant qu'il tient en 100vh.
+   — Dès que le contenu dépasse, on scrolle vers la dernière ligne.
+────────────────────────────────────── */
+const wrap        = document.getElementById('poem-wrap');
+const topSpacer   = document.getElementById('top-spacer');
+const bottomSpacer = document.getElementById('bottom-spacer');
+const headerEl    = document.getElementById('poem-header');
+
+function updateSpacers() {
+  // Calcule la hauteur réelle du contenu (header + poem + footer)
+  const contentH = headerEl.offsetHeight
+    + container.offsetHeight
+    + footerEl.offsetHeight
+    + 32; // marges header + footer
+  const wrapH = wrap.clientHeight;
+
+  if (contentH < wrapH) {
+    // Contenu court : on centre verticalement via les spacers
+    const half = (wrapH - contentH) / 2;
+    topSpacer.style.height    = Math.max(0, half - 32) + 'px';
+    bottomSpacer.style.height = Math.max(0, half) + 'px';
+  } else {
+    // Contenu long : spacers minimaux, on scroll vers le bas
+    topSpacer.style.height    = '0px';
+    bottomSpacer.style.height = '60px';
+  }
+}
+
+function scrollToLatest() {
+  updateSpacers();
+  // Scroll doux vers le bas du contenu visible
+  wrap.scrollTo({ top: wrap.scrollHeight, behavior: 'smooth' });
+}
+
+/* ──────────────────────────────────────
+   TYPEWRITER ENGINE
+────────────────────────────────────── */
+const container = document.getElementById('poem');
+const footerEl  = document.getElementById('poem-footer');
+const CHAR_SPEED = 55;  // ms par caractère (était 26 — plus lent, plus élégant)
+
+let lineIndex  = 0;
+let charIndex  = 0;
+let currentEl  = null;
+let cursorEl   = null;
+
+function tick() {
+  // All lines done
+  if (lineIndex >= POEM.length) {
+    if (cursorEl) cursorEl.remove();
+    revealFooter();
+    return;
+  }
+
+  const entry = POEM[lineIndex];
+
+  // New line starts
+  if (charIndex === 0) {
+    if (cursorEl && cursorEl.parentElement) cursorEl.remove();
+
+    // Empty spacer line
+    if (entry.style === 'empty') {
+      const spacer = document.createElement('div');
+      spacer.className = 'line empty';
+      container.appendChild(spacer);
+      updateSpacers();
+      lineIndex++; charIndex = 0;
+      setTimeout(tick, 40);
+      return;
+    }
+
+    // Create line element
+    currentEl = document.createElement('div');
+    currentEl.className = 'line' + (entry.style ? ' ' + entry.style : '');
+    container.appendChild(currentEl);
+
+    // Blinking cursor
+    cursorEl = document.createElement('span');
+    cursorEl.id = 'cursor';
+    currentEl.appendChild(cursorEl);
+
+    // Trigger fade-in
+    requestAnimationFrame(() =>
+      requestAnimationFrame(() => {
+        currentEl.classList.add('visible');
+        scrollToLatest();   // scroll vers la nouvelle ligne
+      })
+    );
+  }
+
+  if (charIndex < entry.text.length) {
+    // Insert character before cursor
+    const ch = document.createTextNode(entry.text[charIndex]);
+    currentEl.insertBefore(ch, cursorEl);
+    charIndex++;
+
+    // Natural rhythm: pause at punctuation
+    const c = entry.text[charIndex - 1];
+    const delay = (c === ',' || c === '.' || c === '…')
+      ? CHAR_SPEED * 5        // longue pause aux ponctuations
+      : CHAR_SPEED + Math.random() * 18;  // légère variation naturelle
+
+    setTimeout(tick, delay);
+  } else {
+    // Line complete
+    lineIndex++; charIndex = 0;
+    setTimeout(tick, entry.pause || 400);  // pause entre chaque ligne
+  }
+}
+
+/* ── Footer reveal + emoji boom ── */
+function revealFooter() {
+  footerEl.style.animation = 'fadeSlideIn .9s ease both';
+  footerEl.style.opacity   = '1';
+  boom();
+}
+
+function boom() {
+  const emojis = ['💗','🌹',,'💞','🌷'];
+  for (let i = 0; i < 20; i++) {
+    const el = document.createElement('div');
+    const sz = 1.1 + Math.random() * 1.5;
+    el.style.cssText = `
+      position:fixed; z-index:10; pointer-events:none;
+      font-size:${sz}rem;
+      left:${8 + Math.random() * 84}%;
+      top:${8 + Math.random() * 72}%;
+      opacity:0;
+      transform:scale(0) rotate(${Math.random()*360}deg);
+      transition:opacity .45s ease, transform .6s cubic-bezier(.175,.885,.32,1.275);
+      transition-delay:${i * 55}ms;
+    `;
+    el.textContent = emojis[i % emojis.length];
+    document.body.appendChild(el);
+    // Appear
+    setTimeout(() => {
+      el.style.opacity   = '.9';
+      el.style.transform = `scale(1) rotate(${Math.random()*30 - 15}deg)`;
+    }, 30);
+    // Fly away
+    setTimeout(() => {
+      el.style.opacity   = '0';
+      el.style.transform = `scale(1.4) translateY(-50px) rotate(${Math.random()*60}deg)`;
+    }, 1200 + i * 55);
+    setTimeout(() => el.remove(), 2200);
+  }
+}
+
+/* ── FLOATING HEARTS particles ── */
+const heartsEl    = document.getElementById('hearts');
+const heartGlyphs = ['💗','🌹','💕','🌷','❤️','🌸'];
+
+function spawnHeart() {
+  const el = document.createElement('div');
+  el.className = 'heart';
+  const sz = .5 + Math.random() * .75;
+  el.style.cssText = `
+    left:${Math.random()*100}%;
+    font-size:${sz}rem;
+    animation-duration:${9 + Math.random()*10}s;
+    animation-delay:${Math.random()*3}s;
+  `;
+  el.textContent = heartGlyphs[Math.floor(Math.random() * heartGlyphs.length)];
+  heartsEl.appendChild(el);
+  setTimeout(() => el.remove(), 22000);
+}
+
+setInterval(spawnHeart, 950);
+for (let i = 0; i < 7; i++) setTimeout(spawnHeart, i * 280);
+
+/* ══════════════════════════════════════
+   MOTEUR MUSICAL — Web Audio API
+   Piano doux + nappes de cordes génératives
+   Aucun fichier externe requis.
+   Démarre sur clic (politique autoplay navigateur).
+══════════════════════════════════════ */
+const musicBtn = document.getElementById('music-btn');
+let audioCtx   = null;
+let masterGain = null;
+let isPlaying  = false;
+let musicLoop  = null;
+
+/* Gamme de Do majeur / La mineur pentatonique — douce et romantique */
+const SCALE = [261.63, 293.66, 329.63, 349.23, 392.00, 440.00, 493.88, 523.25, 587.33, 659.25];
+/* Accords arpégés (indices dans SCALE) */
+const CHORDS = [
+  [0, 2, 4, 7],   // Do maj
+  [5, 0, 2, 4],   // La min
+  [3, 5, 7, 2],   // Fa maj
+  [4, 7, 2, 5],   // Sol maj
+];
+
+function initAudio() {
+  if (audioCtx) return;
+  audioCtx   = new (window.AudioContext || window.webkitAudioContext)();
+  masterGain = audioCtx.createGain();
+  masterGain.gain.setValueAtTime(0, audioCtx.currentTime);
+  masterGain.gain.linearRampToValueAtTime(0.22, audioCtx.currentTime + 2.5); // fade-in doux
+  masterGain.connect(audioCtx.destination);
+}
+
+/* Joue une note de piano synthétique (sine + triangle = timbre doux) */
+function playNote(freq, startTime, duration, vol = 0.18) {
+  if (!audioCtx) return;
+
+  const osc1 = audioCtx.createOscillator();
+  const osc2 = audioCtx.createOscillator();
+  const gain = audioCtx.createGain();
+  const filter = audioCtx.createBiquadFilter();
+
+  osc1.type = 'sine';     osc1.frequency.value = freq;
+  osc2.type = 'triangle'; osc2.frequency.value = freq * 2.01; // légère harmonique
+
+  filter.type = 'lowpass'; filter.frequency.value = 1800; filter.Q.value = 0.7;
+
+  osc1.connect(filter); osc2.connect(filter); filter.connect(gain); gain.connect(masterGain);
+
+  // Enveloppe ADSR piano — attaque courte, decay longue, sustain bas
+  gain.gain.setValueAtTime(0, startTime);
+  gain.gain.linearRampToValueAtTime(vol, startTime + 0.012);
+  gain.gain.exponentialRampToValueAtTime(vol * 0.35, startTime + 0.18);
+  gain.gain.exponentialRampToValueAtTime(0.0001, startTime + duration);
+
+  osc1.start(startTime); osc1.stop(startTime + duration + 0.05);
+  osc2.start(startTime); osc2.stop(startTime + duration + 0.05);
+}
+
+/* Nappe de cordes douce (oscillateur lent + reverb simulé) */
+function playPad(freq, startTime, duration, vol = 0.06) {
+  if (!audioCtx) return;
+  const osc   = audioCtx.createOscillator();
+  const gain  = audioCtx.createGain();
+  const filt  = audioCtx.createBiquadFilter();
+
+  osc.type = 'sawtooth'; osc.frequency.value = freq * 0.5;
+  filt.type = 'lowpass'; filt.frequency.value = 500; filt.Q.value = 1.2;
+
+  osc.connect(filt); filt.connect(gain); gain.connect(masterGain);
+
+  gain.gain.setValueAtTime(0, startTime);
+  gain.gain.linearRampToValueAtTime(vol, startTime + 1.2);
+  gain.gain.setValueAtTime(vol, startTime + duration - 1.5);
+  gain.gain.linearRampToValueAtTime(0, startTime + duration);
+
+  osc.start(startTime); osc.stop(startTime + duration + 0.1);
+}
+
+/* Génère une mesure musicale — arpège piano + nappe */
+function scheduleMeasure(chordIdx, startTime) {
+  const chord    = CHORDS[chordIdx % CHORDS.length];
+  const beatDur  = 0.55; // durée d'une noire (lent et romantique)
+  const noteDur  = beatDur * 3.2;
+
+  // Arpège de 4 notes + octave
+  chord.forEach((noteIdx, i) => {
+    const freq = SCALE[noteIdx % SCALE.length];
+    const oct  = i < 2 ? 0.5 : 1; // basse à l'octave inférieure pour les 2 premiers
+    playNote(freq * oct, startTime + i * beatDur, noteDur, 0.14);
+  });
+  // Note haute mélodique
+  const melNote = SCALE[(chord[2] + 2) % SCALE.length];
+  playNote(melNote * 2, startTime + beatDur * 1.5, noteDur * 0.8, 0.08);
+
+  // Nappe continue sur l'accord
+  const padFreq = SCALE[chord[0] % SCALE.length];
+  playPad(padFreq, startTime, beatDur * 4 + 0.5, 0.055);
+
+  return startTime + beatDur * 4; // retourne le début de la prochaine mesure
+}
+
+let chordCursor = 0;
+let scheduleTime = 0;
+
+function musicScheduler() {
+  if (!isPlaying || !audioCtx) return;
+
+  const lookahead = 0.3; // secondes d'avance
+  const now = audioCtx.currentTime;
+
+  while (scheduleTime < now + lookahead) {
+    scheduleTime = scheduleMeasure(chordCursor, scheduleTime);
+    chordCursor  = (chordCursor + 1) % CHORDS.length;
+  }
+
+  musicLoop = setTimeout(musicScheduler, 150);
+}
+
+function startMusic() {
+  initAudio();
+  if (audioCtx.state === 'suspended') audioCtx.resume();
+  isPlaying    = true;
+  scheduleTime = audioCtx.currentTime + 0.1;
+  musicBtn.textContent = '🔇';
+  musicBtn.classList.add('playing');
+  musicScheduler();
+}
+
+function stopMusic() {
+  isPlaying = false;
+  clearTimeout(musicLoop);
+  if (masterGain) {
+    masterGain.gain.cancelScheduledValues(audioCtx.currentTime);
+    masterGain.gain.setValueAtTime(masterGain.gain.value, audioCtx.currentTime);
+    masterGain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 1.2);
+  }
+  musicBtn.textContent = '🎵';
+  musicBtn.classList.remove('playing');
+}
+
+musicBtn.addEventListener('click', () => {
+  isPlaying ? stopMusic() : startMusic();
+});
+
+/* ── START after page fade-in ── */
+updateSpacers();
+window.addEventListener('resize', updateSpacers);
+setTimeout(tick, 1900);
+</script>
+</body>
+</html>
